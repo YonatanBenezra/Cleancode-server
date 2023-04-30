@@ -10,6 +10,7 @@ const exerciseSchema = new mongoose.Schema(
     position: { type: Number, required: true },
     approved: { type: Boolean, default: true, required: true },
     hint: { type: String },
+    attempts: { type: Number, default: 0 },
   },
   {
     timestamps: true,
