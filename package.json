@@ -1,4 +1,11 @@
 {
+  "name": "clean_code",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "build": "node server.js"
+  },
   "dependencies": {
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -11,8 +18,5 @@
     "mongoose": "^7.0.5",
     "morgan": "^1.10.0",
     "xss-clean": "^0.1.1"
-  },
-  "engines": {
-    "node": ">=14 <15"
   }
 }
