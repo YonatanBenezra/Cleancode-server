@@ -1,21 +1,18 @@
-const express = require('express');
-const topicController = require('../controllers/topicController');
+const express = require("express");
+const topicController = require("../controllers/topicController");
 const router = express.Router();
 
-router.route('/').get(topicController.getAllTopics);
+// Route for creating a new topic
+router.post("/", topicController.createTopic);
 
-router.route('/:id').get(topicController.getTopic);
-
-// // Protect all routes after this middleware
-// // router.use(authController.protect);
-// // router.use(authController.restrictTo('admin'));
-
-router.route('/').post(topicController.createTopic);
+// Routes for getting all topics and updating a specific topic
 router
-  .route('/:id')
-  .patch(
-    topicController.updateTopic
-  )
+  .route("/:id")
+  .get(topicController.getTopic)
+  .patch(topicController.updateTopic)
   .delete(topicController.deleteTopic);
+
+// Route for getting all topics (alternative way using 'getAllTopics')
+router.get("/", topicController.getAllTopics);
 
 module.exports = router;
