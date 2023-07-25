@@ -4,7 +4,6 @@ const exerciseSchema = new mongoose.Schema(
     description: { type: String, required: true },
     question: { type: String },
     code: { type: String, required: true },
-    /* answers: { type: Array, required: true }, */
     difficulty: { type: Number, required: true },
     topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" },
     position: { type: Number, required: true },

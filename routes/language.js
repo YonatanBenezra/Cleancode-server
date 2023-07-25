@@ -2,17 +2,16 @@ const express = require("express");
 const languageController = require("../controllers/languageController");
 const router = express.Router();
 
-router.route("/").get(languageController.getAllLanguages);
+// Route for getting all languages and creating a new language
+router
+  .route("/")
+  .get(languageController.getAllLanguages)
+  .post(languageController.createLanguage);
 
-router.route("/:id").get(languageController.getLanguage);
-
-// // Protect all routes after this middleware
-// // router.use(authController.protect);
-// // router.use(authController.restrictTo('admin'));
-
-router.route("/").post(languageController.createLanguage);
+// Routes for getting, updating, and deleting a specific language
 router
   .route("/:id")
+  .get(languageController.getLanguage)
   .patch(languageController.updateLanguage)
   .delete(languageController.deleteLanguage);
 

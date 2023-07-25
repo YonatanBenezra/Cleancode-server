@@ -1,21 +1,18 @@
-const express = require('express');
-const exerciseController = require('../controllers/exerciseController');
+const express = require("express");
+const exerciseController = require("../controllers/exerciseController");
 const router = express.Router();
 
-router.route('/').get(exerciseController.getAllExercises);
-
-router.route('/:id').get(exerciseController.getExercise);
-
-// // Protect all routes after this middleware
-// // router.use(authController.protect);
-// // router.use(authController.restrictTo('admin'));
-
-router.route('/').post(exerciseController.createExercise);
+// Route for getting all exercises and creating a new exercise
 router
-  .route('/:id')
-  .patch(
-    exerciseController.updateExercise
-  )
+  .route("/")
+  .get(exerciseController.getAllExercises)
+  .post(exerciseController.createExercise);
+
+// Routes for getting, updating, and deleting a specific exercise
+router
+  .route("/:id")
+  .get(exerciseController.getExercise)
+  .patch(exerciseController.updateExercise)
   .delete(exerciseController.deleteExercise);
 
 module.exports = router;
