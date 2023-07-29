@@ -13,6 +13,7 @@ const exercisesRoutes = require("./routes/exercise");
 const languagesRoutes = require("./routes/language");
 const topicsRoutes = require("./routes/topic");
 const blogRoutes = require("./routes/blog");
+const authRoutes = require("./routes/auth");
 const bodyParser = require("body-parser");
 
 const app = express();
@@ -67,6 +68,7 @@ app.use("/api/exercises", exercisesRoutes);
 app.use("/api/topics", topicsRoutes);
 app.use("/api/languages", languagesRoutes);
 app.use("/api/blogs", blogRoutes);
+app.use("/api/auth", authRoutes);
 
 // If no routes are matched, send 404
 app.all("*", (req, res, next) => {
