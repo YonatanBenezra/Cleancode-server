@@ -1,4 +1,4 @@
-const Exercise = require("../models/exerciseModel.js");
+const Exercise = require("../models/exerciseModel");
 const handlerFactory = require("./handlerFactory");
 
 exports.createExercise = handlerFactory.createOne(Exercise);
