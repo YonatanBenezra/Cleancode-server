@@ -1,6 +1,4 @@
 const Language = require("../models/languageModel");
-const AppError = require("../utils/appError");
-const catchAsync = require("../utils/catchAsync");
 const handlerFactory = require("./handlerFactory");
 
 exports.createLanguage = handlerFactory.createOne(Language);

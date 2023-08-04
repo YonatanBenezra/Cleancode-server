@@ -18,15 +18,33 @@ exports.updateMe = catchAsync(async (req, res, next) => {
       )
     );
   }
-  // 2) Update user document
-  const { name, email } = req.body;
-  const filteredBody = { name, email };
-  if (req.file) filteredBody.photo = req.file.filename;
 
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+  // 2) Sanitize fields
+  const { name, email, photo, finishedExercise } = req.body;
+  const updateData = { name, email, photo };
+
+  // 3) Find the user
+  const user = await User.findById(req.user.id);
+
+  // Throw error if user not found
+  if (!user) {
+    return next(new AppError('No user found with that ID', 404));
+  }
+
+  // 4) Add the finishedExercise to the array if it doesn't already exist
+  if (finishedExercise && !user.finishedExercises.includes(finishedExercise)) {
+    updateData.finishedExercises = [
+      ...user.finishedExercises,
+      finishedExercise,
+    ];
+  }
+
+  // 5) Update user document
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, updateData, {
     new: true,
     runValidators: true,
   });
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -42,8 +60,14 @@ exports.deleteMe = catchAsync(async (req, res) => {
     data: null,
   });
 });
+
 exports.createUser = handlerFactory.createOne(User);
 exports.getAllUsers = handlerFactory.getAll(User);
-exports.getUser = handlerFactory.getOne(User);
+exports.getUser = handlerFactory.getOne(User, {
+  path: 'finishedExercises',
+  populate: {
+    path: 'topic',
+  },
+});
 exports.updateUser = handlerFactory.updateOne(User);
 exports.deleteUser = handlerFactory.deleteOne(User);
