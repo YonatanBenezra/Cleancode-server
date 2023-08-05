@@ -9,5 +9,4 @@ router.route("/").get(authController.users).post(authController.register);
 router.route("/login").post(authController.login);
 //   .patch(authController.updateUser)
 //   .delete(authController.deleteUser);
-
 module.exports = router;
