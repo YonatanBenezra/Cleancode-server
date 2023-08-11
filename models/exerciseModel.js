@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const exerciseSchema = new mongoose.Schema(
   {
-    description: { type: String, required: true },
+    name: { type: String, required: true },
     question: { type: String },
-    code: { type: String, required: true },
+    description: { type: String, required: true },
     difficulty: { type: Number, required: true },
-    topic: { type: mongoose.Schema.Types.ObjectId, ref: "Topic" },
+    topic: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic' },
     position: { type: Number, required: true },
     approved: { type: Boolean, default: true, required: true },
     hint: { type: String },
@@ -17,6 +17,6 @@ const exerciseSchema = new mongoose.Schema(
   }
 );
 
-const Exercise = mongoose.model("Exercise", exerciseSchema);
+const Exercise = mongoose.model('Exercise', exerciseSchema);
 
 module.exports = Exercise;
