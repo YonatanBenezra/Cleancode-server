@@ -7,7 +7,7 @@ const exerciseSchema = new mongoose.Schema(
     difficulty: { type: Number, required: true },
     topic: { type: mongoose.Schema.Types.ObjectId, ref: 'Topic' },
     position: { type: Number, required: true },
-    approved: { type: Boolean, default: true, required: true },
+    approved: { type: Boolean, default: false, required: true },
     hint: { type: String },
     attempts: { type: Number, default: 0 },
     imageUrl: { type: String },
