@@ -1,4 +1,6 @@
 const crypto = require('crypto');
+const moment = require('moment');
+const schedule = require('node-schedule');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -43,6 +45,14 @@ const userSchema = new mongoose.Schema({
   finishedExercises: [
     { type: mongoose.Schema.Types.ObjectId, ref: 'Exercise' },
   ],
+
+  codeStrike: {
+    type: Number,
+    default: 0,
+  },
+  lastCodedDate: {
+    type: Date,
+  },
 });
 
 userSchema.pre('save', async function (next) {
@@ -82,6 +92,39 @@ userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
 });
+
 const User = mongoose.model('User', userSchema);
+const updateUserStrike = async () => {
+  try {
+    // Get all users from the database
+    const users = await User.find();
+
+    // Use forEach instead of a for...of loop
+    users.forEach(async (user) => {
+      // If user has never coded, skip
+      if (!user.lastCodedDate) return;
+
+      const lastCodedDate = moment(user.lastCodedDate);
+      const currentDate = moment();
+
+      // Difference in days between last coded date and current date
+      const dayDifference = currentDate.diff(lastCodedDate, 'days');
+
+      if (dayDifference === 1) {
+        // User coded yesterday, increment codeStrike
+        user.codeStrike += 1;
+      } else if (dayDifference > 1) {
+        // User didn't code yesterday, reset codeStrike
+        user.codeStrike = 0;
+      }
+      await user.save();
+    });
+  } catch (error) {
+    console.error('Error updating codeStrike:', error);
+  }
+};
+
+// Schedule task to run every day at 00:01
+schedule.scheduleJob('1 0 * * *', updateUserStrike);
 
 module.exports = User;

@@ -1,3 +1,4 @@
+const moment = require('moment');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
@@ -20,7 +21,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Sanitize fields
-  const { name, email, photo, finishedExercise } = req.body;
+  const { name, email, photo, lastCodedDate, finishedExercise } = req.body;
   const updateData = { name, email, photo };
 
   // 3) Find the user
@@ -38,11 +39,19 @@ exports.updateMe = catchAsync(async (req, res, next) => {
       finishedExercise,
     ];
   }
-
-  // 5) Update user document
+  //5) Update lastCodedDate
+  if (lastCodedDate) {
+    updateData.lastCodedDate = moment();
+  }
+  // 6) Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, updateData, {
     new: true,
     runValidators: true,
+  }).populate({
+    path: 'finishedExercises',
+    populate: {
+      path: 'topic',
+    },
   });
 
   res.status(200).json({
