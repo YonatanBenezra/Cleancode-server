@@ -10,7 +10,7 @@ const exerciseSchema = new mongoose.Schema(
     approved: { type: Boolean, default: false, required: true },
     hint: { type: String },
     attempts: { type: Number, default: 0 },
-    imageUrl: { type: String },
+    imgUrl: { type: String },
   },
   {
     timestamps: true,
