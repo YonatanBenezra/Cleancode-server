@@ -14,6 +14,7 @@ const exercisesRoutes = require('./routes/exercise');
 const languagesRoutes = require('./routes/language');
 const topicsRoutes = require('./routes/topic');
 const blogRoutes = require('./routes/blog');
+const quizRoutes = require('./routes/quiz');
 const userRoutes = require('./routes/user');
 
 // Create express application
@@ -79,6 +80,7 @@ app.use('/api/exercises', exercisesRoutes);
 app.use('/api/topics', topicsRoutes);
 app.use('/api/languages', languagesRoutes);
 app.use('/api/blogs', blogRoutes);
+app.use('/api/quizzes', quizRoutes);
 app.use('/api/users', userRoutes);
 
 // If no routes are matched, send 404 error
