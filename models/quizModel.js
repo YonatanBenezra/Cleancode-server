@@ -5,19 +5,27 @@ const quizSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  initialCode: {
+    type: String,
+  },
   options: {
     type: [String],
-    required: true,
   },
   correctAnswer: {
     type: String,
-    required: true,
   },
   time: {
     type: Number,
     required: true,
   },
-  language: { type: mongoose.Schema.Types.ObjectId, ref: 'Language' },
+  type: {
+    type: String,
+    required: true,
+  },
+  language: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Language',
+  },
   difficulty: {
     type: String,
     default: 'easy',
