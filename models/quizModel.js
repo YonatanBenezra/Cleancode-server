@@ -25,6 +25,15 @@ const quizSchema = new mongoose.Schema({
   language: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Language',
+    required: true,
+  },
+  marks: {
+    type: Number,
+    default: 1,
+  },
+  position: {
+    type: Number,
+    required: true,
   },
   difficulty: {
     type: String,
