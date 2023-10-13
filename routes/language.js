@@ -1,4 +1,5 @@
 const express = require("express");
+const authController = require('../controllers/authController');
 const languageController = require("../controllers/languageController");
 const router = express.Router();
 
@@ -6,13 +7,13 @@ const router = express.Router();
 router
   .route("/")
   .get(languageController.getAllLanguages)
-  .post(languageController.createLanguage);
+  .post(authController.restrictTo('admin'),languageController.createLanguage);
 
 // Routes for getting, updating, and deleting a specific language
 router
   .route("/:id")
   .get(languageController.getLanguage)
-  .patch(languageController.updateLanguage)
-  .delete(languageController.deleteLanguage);
+  .patch(authController.restrictTo('admin'),languageController.updateLanguage)
+  .delete(authController.restrictTo('admin'),languageController.deleteLanguage);
 
 module.exports = router;
