@@ -1,41 +1,44 @@
 // Required modules
-const path = require('path');
-const express = require('express');
-const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const AppError = require('./utils/appError');
-const globalErrorHandler = require('./controllers/errorController');
-const exercisesRoutes = require('./routes/exercise');
-const languagesRoutes = require('./routes/language');
-const topicsRoutes = require('./routes/topic');
-const blogRoutes = require('./routes/blog');
-const quizRoutes = require('./routes/quiz');
-const userRoutes = require('./routes/user');
-
-// Create express application
+const path = require('path'); // Core module for working with file paths
+const express = require('express'); // Express.js web application framework
+const morgan = require('morgan'); // HTTP request logger middleware
+const rateLimit = require('express-rate-limit'); // Middleware for rate limiting requests
+const helmet = require('helmet'); // Middleware for setting HTTP security headers
+const mongoSanitize = require('express-mongo-sanitize'); // Middleware for sanitizing MongoDB queries
+const xss = require('xss-clean'); // Middleware for preventing XSS attacks
+const cookieParser = require('cookie-parser'); // Middleware for parsing cookies
+const cors = require('cors'); // Middleware for enabling Cross-Origin Resource Sharing (CORS)
+const stripe = require('stripe')('your-secret-key-here'); // Stripe API integration
+const AppError = require('./utils/appError'); // Custom error handling utility
+const globalErrorHandler = require('./controllers/errorController'); // Global error handling controller
+const exercisesRoutes = require('./routes/exercise'); // Routes for exercises
+const languagesRoutes = require('./routes/language'); // Routes for programming languages
+const topicsRoutes = require('./routes/topic'); // Routes for topics
+const blogRoutes = require('./routes/blog'); // Routes for blog posts
+const quizRoutes = require('./routes/quiz'); // Routes for quizzes
+const userRoutes = require('./routes/user'); // Routes for user-related operations
+const paymentRoutes = require('./routes/payment');
+const questionRoutes = require('./routes/question');
+const userQuizRoutes = require('./routes/userQuiz');
+// Create an Express application
 const app = express();
 
-// CORS middleware
+// Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors());
 
-// Set template engine to ejs
+// Set the template engine to EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 /* === GLOBAL MIDDLEWARE === */
 
-// Serving static files from 'public' directory
+// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set security HTTP headers
+// Set security HTTP headers using Helmet middleware
 app.use(helmet({ contentSecurityPolicy: false }));
 
-// Development logging using morgan only in 'development' environment
+// Development logging using Morgan only in 'development' environment
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
@@ -48,21 +51,21 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Body parser, reading data from body into req.body
+// Parse JSON and URL-encoded data into req.body
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Reading cookies using cookie-parser
+// Parse cookies using cookie-parser middleware
 app.use(cookieParser());
 
-// Data sanitization against NoSQL query injection
+// Data sanitization against NoSQL query injection using express-mongo-sanitize
 app.use(mongoSanitize());
 
-// Data sanitization against XSS (Cross-site Scripting) attacks
-// Commented out since it removes the html tags
+// Data sanitization against XSS (Cross-site Scripting) attacks using xss-clean
+// Commented out since it removes HTML tags
 /* app.use(xss()); */
 
-// Add requested time to the req object
+// Add the request timestamp to the req object
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
@@ -75,6 +78,20 @@ app.get('/', async (req, res, next) => {
   res.send('Hello from the server side!');
 });
 
+// Route for creating a payment using the Stripe API
+app.post('/create-payment', async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const charge = await stripe.charges.create({
+      amount,
+      currency: 'usd',
+    });
+    res.status(200).send({ success: charge });
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
 // API routes
 app.use('/api/exercises', exercisesRoutes);
 app.use('/api/topics', topicsRoutes);
@@ -82,8 +99,11 @@ app.use('/api/languages', languagesRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/userQuizzes', userQuizRoutes);
 
-// If no routes are matched, send 404 error
+// If no routes are matched, send a 404 error
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
