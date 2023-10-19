@@ -21,12 +21,6 @@ const quizSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    questions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Question',
-      },
-    ],
     language: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Language',

@@ -8,7 +8,6 @@ const mongoSanitize = require('express-mongo-sanitize'); // Middleware for sanit
 const xss = require('xss-clean'); // Middleware for preventing XSS attacks
 const cookieParser = require('cookie-parser'); // Middleware for parsing cookies
 const cors = require('cors'); // Middleware for enabling Cross-Origin Resource Sharing (CORS)
-const stripe = require('stripe')('your-secret-key-here'); // Stripe API integration
 const AppError = require('./utils/appError'); // Custom error handling utility
 const globalErrorHandler = require('./controllers/errorController'); // Global error handling controller
 const exercisesRoutes = require('./routes/exercise'); // Routes for exercises
@@ -76,20 +75,6 @@ app.use((req, res, next) => {
 // Default route
 app.get('/', async (req, res, next) => {
   res.send('Hello from the server side!');
-});
-
-// Route for creating a payment using the Stripe API
-app.post('/create-payment', async (req, res) => {
-  try {
-    const { amount } = req.body;
-    const charge = await stripe.charges.create({
-      amount,
-      currency: 'usd',
-    });
-    res.status(200).send({ success: charge });
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
 });
 
 // API routes

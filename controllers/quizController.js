@@ -1,7 +1,7 @@
 const Quiz = require('../models/quizModel');
 const catchAsync = require('../utils/catchAsync');
 const handlerFactory = require('./handlerFactory');
-function selectRandom(array, n) {
+/* function selectRandom(array, n) {
   const shuffled = array.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, n);
 }
@@ -39,7 +39,8 @@ exports.getQuiz = catchAsync(async (req, res, next) => {
     },
   });
 });
-
+ */
+exports.getQuiz = handlerFactory.getOne(Quiz);
 exports.createQuiz = handlerFactory.createOne(Quiz);
 exports.updateQuiz = handlerFactory.updateOne(Quiz);
 exports.getAllQuizzes = handlerFactory.getAll(Quiz);
