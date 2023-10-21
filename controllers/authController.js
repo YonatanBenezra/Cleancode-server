@@ -148,6 +148,17 @@ exports.restrictTo =
     next();
   };
 
+exports.protectAndRestrictTo = (role) =>
+  catchAsync(async (req, res, next) => {
+    // First run the protect middleware
+    await exports.protect(req, res, (err) => {
+      if (err) return next(err);
+    });
+
+    // If protect middleware passes, then run the restrictTo middleware
+    exports.restrictTo(role)(req, res, next);
+  });
+
 // Forgot Password route controller
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get the user based on the POSTed email

@@ -7,14 +7,17 @@ const router = express.Router();
 router
   .route('/')
   .get(userQuizController.getAllUserQuizzes)
-  .post(userQuizController.createUserQuiz); 
+  .post(userQuizController.createUserQuiz);
 // Routes for retrieving, updating, and deleting a specific UserQuiz by its ID
 router
   .route('/:id')
   .get(userQuizController.getUserQuiz)
-  .patch(authController.restrictTo('admin'), userQuizController.updateUserQuiz)
+  .patch(
+    authController.protectAndRestrictTo('admin'),
+    userQuizController.updateUserQuiz
+  )
   .delete(
-    authController.restrictTo('admin'),
+    authController.protectAndRestrictTo('admin'),
     userQuizController.deleteUserQuiz
   );
 

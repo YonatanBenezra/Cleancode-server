@@ -10,12 +10,20 @@ const paymentSchema = new mongoose.Schema(
     status: String,
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' },
+    accessGranted: {
+      type: Boolean,
+      default: true,
+    },
     purchase_units: [
       {
         description: String,
         amount: {
           currency_code: String,
           value: String,
+        },
+        payee: {
+          email_address: String,
+          merchant_id: String,
         },
       },
     ],
