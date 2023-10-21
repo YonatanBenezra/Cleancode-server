@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const questionSchema = new mongoose.Schema({
   question: {
     type: String,
@@ -39,6 +38,11 @@ const questionSchema = new mongoose.Schema({
     type: String,
     enum: ['easy', 'medium', 'hard'],
     default: 'easy',
+  },
+  quiz: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Quiz',
+    required: true,
   },
 });
 
