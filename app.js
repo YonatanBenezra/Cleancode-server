@@ -74,7 +74,7 @@ app.use((req, res, next) => {
 
 // Default route
 app.get('/', async (req, res, next) => {
-  res.send('Hello from the server side!');
+  res.send('Hi!');
 });
 
 // API routes
