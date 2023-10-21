@@ -13,9 +13,12 @@ router
 router
   .route('/:id')
   .get(exerciseController.getExercise)
-  .patch(authController.restrictTo('admin'), exerciseController.updateExercise)
+  .patch(
+    authController.protectAndRestrictTo('admin'),
+    exerciseController.updateExercise
+  )
   .delete(
-    authController.restrictTo('admin'),
+    authController.protectAndRestrictTo('admin'),
     exerciseController.deleteExercise
   );
 

@@ -7,14 +7,14 @@ const router = express.Router();
 router
   .route('/')
   .get(topicController.getAllTopics)
-  .post(authController.restrictTo('admin'), topicController.createTopic);
+  .post(authController.protectAndRestrictTo('admin'), topicController.createTopic);
 
 // Routes for getting all topics and updating a specific topic
 router
   .route('/:id')
   .get(topicController.getTopic)
-  .patch(authController.restrictTo('admin'), topicController.updateTopic)
-  .delete(authController.restrictTo('admin'), topicController.deleteTopic);
+  .patch(authController.protectAndRestrictTo('admin'), topicController.updateTopic)
+  .delete(authController.protectAndRestrictTo('admin'), topicController.deleteTopic);
 
 // Route for getting all topics (alternative way using 'getAllTopics')
 

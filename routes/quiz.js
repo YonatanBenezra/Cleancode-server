@@ -7,13 +7,22 @@ const router = express.Router();
 router
   .route('/')
   .get(quizController.getAllQuizzes)
-  .post(authController.restrictTo('admin'), quizController.createQuiz);
+  .post(
+    authController.protectAndRestrictTo('admin'),
+    quizController.createQuiz
+  );
 
 // Routes for getting, updating, and deleting a specific quiz
 router
   .route('/:id')
   .get(quizController.getQuiz)
-  .patch(authController.restrictTo('admin'), quizController.updateQuiz)
-  .delete(authController.restrictTo('admin'), quizController.deleteQuiz);
+  .patch(
+    authController.protectAndRestrictTo('admin'),
+    quizController.updateQuiz
+  )
+  .delete(
+    authController.protectAndRestrictTo('admin'),
+    quizController.deleteQuiz
+  );
 
 module.exports = router;

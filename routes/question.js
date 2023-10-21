@@ -7,14 +7,20 @@ const router = express.Router();
 router
   .route('/')
   .get(questionController.getAllQuestions)
-  .post(authController.restrictTo('admin'), questionController.createQuestion);
+  .post(
+    authController.protectAndRestrictTo('admin'),
+    questionController.createQuestion
+  );
 // Routes for retrieving, updating, and deleting a specific Question by its ID
 router
   .route('/:id')
   .get(questionController.getQuestion)
-  .patch(authController.restrictTo('admin'), questionController.updateQuestion)
+  .patch(
+    authController.protectAndRestrictTo('admin'),
+    questionController.updateQuestion
+  )
   .delete(
-    authController.restrictTo('admin'),
+    authController.protectAndRestrictTo('admin'),
     questionController.deleteQuestion
   );
 module.exports = router;

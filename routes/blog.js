@@ -7,13 +7,22 @@ const router = express.Router();
 router
   .route('/')
   .get(blogController.getAllBlogs)
-  .post(authController.restrictTo('admin'), blogController.createBlog);
+  .post(
+    authController.protectAndRestrictTo('admin'),
+    blogController.createBlog
+  );
 
 // Route for getting, updating, and deleting a specific blog
 router
   .route('/:id')
-  .get(blogController.getBlog) 
-  .patch(authController.restrictTo('admin'), blogController.updateBlog)
-  .delete(authController.restrictTo('admin'), blogController.deleteBlog);
+  .get(blogController.getBlog)
+  .patch(
+    authController.protectAndRestrictTo('admin'),
+    blogController.updateBlog
+  )
+  .delete(
+    authController.protectAndRestrictTo('admin'),
+    blogController.deleteBlog
+  );
 
 module.exports = router;
