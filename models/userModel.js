@@ -62,6 +62,15 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  trialQuizInfo: [
+    {
+      quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' },
+      trialsRemaining: {
+        type: Number,
+        default: 3,
+      },
+    },
+  ],
   // Date of the user's last coding activity
   lastCodedDate: {
     type: Date,
